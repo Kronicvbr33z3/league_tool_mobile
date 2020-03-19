@@ -31,7 +31,17 @@ Map champs = {
   'Gangplank': '41',
   'Sett': '875',
   'Malphite': '54',
-  'PRenekton': '58',
+  'Poppy': '78',
+  'Karthus': '30',
+  'Jayce': '126',
+  'Diana': '131',
+  'Trundle': '48',
+  'Graves': '104',
+  'Zoe': '142',
+  'Gnar': '150',
+  'Lux': '99',
+  'Shyvana': '102',
+  'Renekton': '58',
   'Lissandra': '127',
   'Fiora': '114',
   'Jinx': '222',
@@ -54,7 +64,7 @@ Map champs = {
   'Olaf': '2',
   'Ziggs': '115',
   'Syndra': '134',
-  'Dr. Mundo': '36',
+  'Dr Mundo': '36',
   'Karma': '43',
   'Annie': '1',
   'Akali': '84',
@@ -101,7 +111,7 @@ Map champs = {
   'Twitch': '29',
   'Garen': '86',
   'Blitzcrank': '53',
-  'Master Yi': '11',
+  'MasterYi': '11',
   'Pyke': '555',
   'Elise': '60',
   'Alistar': '12',
@@ -114,7 +124,7 @@ Map champs = {
   'Draven': '119',
   'Tahm Kench': '223',
   'Talon': '91',
-  'Xin Zhao': '5',
+  'XinZhao': '5',
   'Swain': '50',
   'Aurelion Sol': '136',
   'LeeSin': '64',
@@ -125,7 +135,7 @@ Map champs = {
   'Tristana': '18',
   'RekSai': '421',
   'Vladimir': '8',
-  'JarvanIV': '59',
+  'Jarvan IV': '59',
   'Nami': '267',
   'Jhin': '202',
   'Soraka': '16',
@@ -136,18 +146,21 @@ Map champs = {
   'Gragas': '79',
   'Zed': '238',
   'Vi': '254',
-  'Kog Maw': '96',
+  'KogMaw': '96',
   'Taric': '44',
   'Quinn': '133',
   'Leblanc': '7',
   'Ezreal': '81'
 };
 
+final String apiKey = 'RGAPI-217010d7-cf8c-44c4-ae74-a18d7b421fd7';
+
 class Summoner {
-  final String apiKey = 'RGAPI-6f7d0f7d-64e3-4aee-9c9b-e340e7da6841';
   String summonerName;
   String accountId = 'loading';
   MatchHistory matches;
+  Rank rank;
+  String summonerId = 'loading';
   Summoner({this.summonerName});
 
   Future<void> getAccountId() async {
@@ -158,6 +171,7 @@ class Summoner {
       Map summoner = jsonDecode(response.body);
 
       accountId = summoner['accountId'];
+      summonerId = summoner['id'];
       summonerName = summoner['name'];
     } catch (e) {
       print('Unable to Load Summoner');
@@ -165,14 +179,25 @@ class Summoner {
     }
   }
 
-  Future<void> retrieveMatchHistory() async {
+  Future<void> getRankedInfo() async {
+    try {
+      Response response = await get(
+          'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/$summonerId?api_key=$apiKey');
+      rank = new Rank.fromJson(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> setupSummoner() async {
     await getAccountId();
+    await getRankedInfo();
     try {
       Response response = await get(
           'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/$accountId?endIndex=20&api_key=$apiKey');
       matches = new MatchHistory.fromJson(response.body);
       for (var i = 0; i < (20); i++) {
-        await matches.matches[i].getGameInfo();
+        await matches.matches[i].getGameInfo(accountId);
       }
     } catch (e) {
       print('Error: $e');
@@ -186,8 +211,12 @@ class Matches {
   int champion;
   int queue;
 
+  Participants participants;
+  ParticipantIds ids;
+
   //GameInfo Translated
   String championName;
+  bool win;
 
   Matches.fromJson(Map<String, dynamic> jsonMap) {
     this.lane = jsonMap['lane'];
@@ -195,10 +224,23 @@ class Matches {
     this.champion = jsonMap['champion'];
     this.queue = jsonMap['queue'];
   }
-  Future<void> getGameInfo() async {
+  Future<void> getGameInfo(String accId) async {
     //This line of codeWOOOOOOOOOOOOOOOOOOOOOOOOOOO
     championName = (champs.keys.firstWhere((k) => champs[k] == '$champion',
         orElse: () => null)).toString();
+    Response response = await get(
+        'https://na1.api.riotgames.com/lol/match/v4/matches/$gameId?api_key=$apiKey');
+    participants = Participants.fromJson(response.body);
+    GetPlayerMatchInfo(participants, accId);
+  }
+
+  GetPlayerMatchInfo(Participants participants, String accId) {
+    for (var i = 0; i < (10); i++) {
+      //If someone in the match has the same account ID
+      if (participants.ids[i].player.accountId == accId) {
+        win = participants.participants[i].stats.win;
+      }
+    }
   }
 }
 
@@ -213,5 +255,92 @@ class MatchHistory {
     for (var i = 0; i < (20); i++) {
       this.matches.add(new Matches.fromJson(_matchesList[i]));
     }
+  }
+}
+
+class Player {
+  String accountId;
+  int profileIcon;
+
+  Player.fromJson(Map<String, dynamic> jsonMap) {
+    this.accountId = jsonMap['accountId'];
+    this.profileIcon = jsonMap['profileIcon'];
+  }
+}
+
+class ParticipantIds {
+  Player player;
+  int participantId;
+
+  ParticipantIds.fromJson(Map<String, dynamic> jsonMap) {
+    this.player = Player.fromJson(jsonMap['player']);
+    this.participantId = jsonMap['participantId'];
+  }
+}
+
+//Stats
+class Stats {
+  bool win;
+
+  Stats.fromJson(Map<String, dynamic> jsonMap) {
+    this.win = jsonMap['win'];
+  }
+}
+
+//Middle
+class Participant {
+  Stats stats;
+  int participantId;
+
+  Participant.fromJson(Map<String, dynamic> jsonMap) {
+    this.participantId = jsonMap['participantId'];
+    this.stats = Stats.fromJson(jsonMap['stats']);
+  }
+}
+
+//Upper
+class Participants {
+  List<Participant> participants;
+  List<ParticipantIds> ids;
+  Participants.fromJson(String jsonStr) {
+    final _map = jsonDecode(jsonStr);
+    this.participants = [];
+    this.ids = [];
+    final _participantsList = _map['participants'];
+    final _idList = _map['participantIdentities'];
+    for (var i = 0; i < (10); i++) {
+      this.participants.add(Participant.fromJson(_participantsList[i]));
+      this.ids.add(ParticipantIds.fromJson(_idList[i]));
+    }
+  }
+}
+class Ranks {
+  String queueType;
+  int wins;
+  String rank;
+  String tier;
+  int lp;
+
+  Ranks.fromJson(Map<String, dynamic> jsonMap){
+    this.queueType = jsonMap['queueType'];
+    this.wins = jsonMap['wins'];
+    this.rank = jsonMap['rank'];
+    this.tier = jsonMap['tier'];
+    this.lp = jsonMap['leaguePoints'];
+  }
+
+
+}
+
+
+class Rank {
+  List<Ranks> ranks;
+  Rank.fromJson(String jsonStr) {
+    final _map = jsonDecode(jsonStr);
+
+
+    //Takes length of list to create ranks
+    var list = _map as List;
+    ranks = list.map((i) => Ranks.fromJson(i)).toList();
   }
 }

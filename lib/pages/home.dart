@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
     _controller = TextEditingController();
   }
   Future<void> setupSummoner(Summoner instance) async {
-      await instance.retrieveMatchHistory();
+      await instance.setupSummoner();
 
   }
   void dispose() {

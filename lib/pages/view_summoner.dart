@@ -7,13 +7,22 @@ class ViewSummoner extends StatefulWidget {
   _ViewSummonerState createState() => _ViewSummonerState();
 }
 
-//TODO MAKE EVERYHTING PRETTY
+//TODO DISPLAY RANK
 class _ViewSummonerState extends State<ViewSummoner> {
   Widget _buildRow(Summoner data, int index) {
     return ListTile(
-      leading: Icon(Icons.face),
+      leading: Text((() {
+        if (data.matches.matches[index].win) {
+          return "Victory";
+        }
+        return "Defeat";
+      }())),
       title: Text(data.matches.matches[index].championName),
     );
+  }
+
+  Widget _buildRank(Summoner data) {
+    return Container();
   }
 
   Widget _buildMatchHistory(Summoner data) {
@@ -22,15 +31,13 @@ class _ViewSummonerState extends State<ViewSummoner> {
         padding: const EdgeInsets.all(16.0),
         itemBuilder: (context, i) {
           return _buildRow(data, i);
-
-          return Container();
         });
   }
 
   @override
   Widget build(BuildContext context) {
     Summoner data = ModalRoute.of(context).settings.arguments;
-    print(data.accountId);
+    print(data.summonerId);
     if (data.accountId == null || data.summonerName == null) {
       data.accountId = "Summoner Not Found!";
       data.summonerName = "Summoner Not Found!";
@@ -40,10 +47,17 @@ class _ViewSummonerState extends State<ViewSummoner> {
       appBar: AppBar(
         title: Text(data.summonerName),
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
-        child: _buildMatchHistory(data),
-      ),
-    );
+      body: Column(
+        children: <Widget>[
+          Text(data.rank.ranks[0].tier),
+          Expanded(
+            child:Padding(
+              padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
+              child: _buildMatchHistory(data),
+            ) ,
+          )
+        ],
+        ),
+      );
   }
 }
