@@ -82,7 +82,7 @@ Map champs = {
   'Vayne': '67',
   'Nasus': '75',
   'Kayn': '141',
-  'TwistedFate': '4',
+  'Twisted Fate': '4',
   'Chogath': '31',
   'Udyr': '77',
   'Lucian': '236',
@@ -111,7 +111,7 @@ Map champs = {
   'Twitch': '29',
   'Garen': '86',
   'Blitzcrank': '53',
-  'MasterYi': '11',
+  'Master Yi': '11',
   'Pyke': '555',
   'Elise': '60',
   'Alistar': '12',
@@ -124,10 +124,10 @@ Map champs = {
   'Draven': '119',
   'Tahm Kench': '223',
   'Talon': '91',
-  'XinZhao': '5',
+  'Xin Zhao': '5',
   'Swain': '50',
   'Aurelion Sol': '136',
-  'LeeSin': '64',
+  'Lee Sin': '64',
   'Aphelios': '523',
   'Ahri': '103',
   'Malzahar': '90',
@@ -153,7 +153,7 @@ Map champs = {
   'Ezreal': '81'
 };
 
-final String apiKey = 'RGAPI-217010d7-cf8c-44c4-ae74-a18d7b421fd7';
+final String apiKey = 'RGAPI-37526445-c422-40f7-8058-2d217ae3351b';
 
 class Summoner {
   String summonerName;
@@ -217,6 +217,9 @@ class Matches {
   //GameInfo Translated
   String championName;
   bool win;
+  int kills;
+  int deaths;
+  int assists;
 
   Matches.fromJson(Map<String, dynamic> jsonMap) {
     this.lane = jsonMap['lane'];
@@ -239,6 +242,10 @@ class Matches {
       //If someone in the match has the same account ID
       if (participants.ids[i].player.accountId == accId) {
         win = participants.participants[i].stats.win;
+        kills = participants.participants[i].stats.kills;
+        deaths = participants.participants[i].stats.deaths;
+        assists = participants.participants[i].stats.assists;
+
       }
     }
   }
@@ -278,19 +285,45 @@ class ParticipantIds {
   }
 }
 
-//Stats
+//Add Anything From Participant:Stats here
 class Stats {
   bool win;
+  int item0;
+  int item1;
+  int item2;
+  int item3;
+  int item4;
+  int item5;
+  int item6;
+  int kills;
+  int deaths;
+  int assists;
+
 
   Stats.fromJson(Map<String, dynamic> jsonMap) {
     this.win = jsonMap['win'];
+    this.item0 = jsonMap['item0'];
+    this.item1 = jsonMap['item1'];
+    this.item2 = jsonMap['item2'];
+    this.item3 = jsonMap['item3'];
+    this.item4 = jsonMap['item4'];
+    this.item5 = jsonMap['item5'];
+    this.item6 = jsonMap['item6'];
+    this.kills = jsonMap['kills'];
+    this.deaths = jsonMap['deaths'];
+    this.assists = jsonMap['assists'];
+
   }
 }
 
-//Middle
+//Participant
 class Participant {
   Stats stats;
   int participantId;
+  int teamId;
+  int championId;
+  int spell1ID;
+  int spell2Id;
 
   Participant.fromJson(Map<String, dynamic> jsonMap) {
     this.participantId = jsonMap['participantId'];
@@ -298,7 +331,7 @@ class Participant {
   }
 }
 
-//Upper
+//Match
 class Participants {
   List<Participant> participants;
   List<ParticipantIds> ids;
@@ -314,6 +347,8 @@ class Participants {
     }
   }
 }
+
+// INFO FROM RANKS (ADD ANYTHING FOR RANKS HERE)
 class Ranks {
   String queueType;
   int wins;
@@ -332,7 +367,7 @@ class Ranks {
 
 }
 
-
+//TOP LEVEL RANK
 class Rank {
   List<Ranks> ranks;
   Rank.fromJson(String jsonStr) {

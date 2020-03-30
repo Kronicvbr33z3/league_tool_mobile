@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:leaguetool/services/summoner.dart';
 
 class ViewSummoner extends StatefulWidget {
   static const routeName = '/view_summoner';
+
   @override
   _ViewSummonerState createState() => _ViewSummonerState();
 }
@@ -10,14 +12,44 @@ class ViewSummoner extends StatefulWidget {
 //TODO DISPLAY RANK
 class _ViewSummonerState extends State<ViewSummoner> {
   Widget _buildRow(Summoner data, int index) {
-    return ListTile(
-      leading: Text((() {
-        if (data.matches.matches[index].win) {
-          return "Victory";
-        }
-        return "Defeat";
-      }())),
-      title: Text(data.matches.matches[index].championName),
+    Color getColor(int index) {
+      if (data.matches.matches[index].win) {
+        return Colors.blue[400];
+      }
+      else {
+        return Colors.red[400];
+      }
+    }
+    CircleAvatar getChampionIcon(String championName) {
+      String champ = championName.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+      String path = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/$champ.png';
+      print(path);
+      return CircleAvatar(backgroundImage: NetworkImage(path),
+        backgroundColor: Colors.transparent,);
+    }
+    return Container(
+      color: getColor(index),
+      child: ListTile(
+
+        leading: Text((() {
+          if (data.matches.matches[index].win) {
+            return "Victory";
+          }
+          return "Defeat";
+        }()), style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Row(
+
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(data.matches.matches[index].kills.toString()),
+            Text('/'),
+            Text(data.matches.matches[index].deaths.toString()),
+            Text('/'),
+            Text(data.matches.matches[index].assists.toString()),
+          ],
+        ),
+        trailing: getChampionIcon(data.matches.matches[index].championName),
+      ),
     );
   }
 
@@ -28,9 +60,9 @@ class _ViewSummonerState extends State<ViewSummoner> {
   Widget _buildMatchHistory(Summoner data) {
     return ListView.builder(
         itemCount: 20,
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(0),
         itemBuilder: (context, i) {
-          return _buildRow(data, i);
+          return Padding(padding: EdgeInsets.all(8), child: _buildRow(data, i));
         });
   }
 
@@ -43,21 +75,42 @@ class _ViewSummonerState extends State<ViewSummoner> {
       data.summonerName = "Summoner Not Found!";
     }
     return Scaffold(
-      backgroundColor: Colors.purple[900],
+      backgroundColor: Colors.deepPurple[900],
       appBar: AppBar(
         title: Text(data.summonerName),
+        elevation: 0.0,
       ),
       body: Column(
         children: <Widget>[
-          Text(data.rank.ranks[0].tier),
+          Padding(
+            padding: EdgeInsets.fromLTRB(250, 20, 0, 0),
+            child: Column(
+              children: <Widget>[
+                Text(data.rank.ranks[0].tier,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(data.rank.ranks[0].rank,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(data.rank.ranks[0].lp.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('LP', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                )
+
+              ],
+            ),
+          ),
+
           Expanded(
             child:Padding(
-              padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 170, 0, 0),
               child: _buildMatchHistory(data),
             ) ,
           )
         ],
-        ),
-      );
+      ),
+    );
   }
 }

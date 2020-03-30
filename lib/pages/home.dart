@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
     return new WillPopScope(
     onWillPop: () async => false,
     child: new Scaffold(
-        backgroundColor: Colors.purple[900],
+        backgroundColor: Colors.deepPurple[900],
         appBar: AppBar(
           leading: new Container(),
           title: Text('Made by Luis :)'),
