@@ -153,7 +153,7 @@ Map champs = {
   'Ezreal': '81'
 };
 
-final String apiKey = 'RGAPI-37526445-c422-40f7-8058-2d217ae3351b';
+final String apiKey = 'RGAPI-264fdee2-9128-490d-bf8a-f4a483d73201';
 
 class Summoner {
   String summonerName;

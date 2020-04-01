@@ -23,7 +23,6 @@ class _ViewSummonerState extends State<ViewSummoner> {
     CircleAvatar getChampionIcon(String championName) {
       String champ = championName.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
       String path = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/$champ.png';
-      print(path);
       return CircleAvatar(backgroundImage: NetworkImage(path),
         backgroundColor: Colors.transparent,);
     }
@@ -75,7 +74,7 @@ class _ViewSummonerState extends State<ViewSummoner> {
       data.summonerName = "Summoner Not Found!";
     }
     return Scaffold(
-      backgroundColor: Colors.deepPurple[900],
+      backgroundColor: Colors.deepPurple[700],
       appBar: AppBar(
         title: Text(data.summonerName),
         elevation: 0.0,
