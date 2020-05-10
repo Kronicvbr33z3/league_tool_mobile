@@ -27,20 +27,30 @@ class _LeagueHomeScreenState extends State<LeagueHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: TextField(
-        controller: _controller,
-        onSubmitted: (String value) async {
-          Summoner instance = Summoner(summonerName: value);
-          await setupSummoner(instance);
-          Navigator.pushNamed(context, ViewSummoner.routeName,
-              arguments: instance);
-        },
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Summoner Lookup',
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: TextField(
+          controller: _controller,
+          onSubmitted: (String value) async {
+            if (value == '') {
+              //Field is Empty Don't Submit
+            } else {
+              Summoner instance = Summoner(summonerName: value);
+              await setupSummoner(instance);
+              Navigator.pushNamed(context, ViewSummoner.routeName,
+                  arguments: instance);
+            }
+          },
+          decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(50)),),
+              hintStyle: TextStyle(color: Colors.grey),
+              hintText: 'Summoner Lookup',
+              labelText: 'Summoner Lookup',
+              fillColor: Color.fromRGBO(28, 22, 46, 1)
+          ),
         ),
       ),
     );
-    ;
   }
 }

@@ -153,7 +153,7 @@ Map champs = {
   'Ezreal': '81'
 };
 
-final String apiKey = 'RGAPI-264fdee2-9128-490d-bf8a-f4a483d73201';
+final String apiKey = 'RGAPI-88da60fc-f70c-446c-9bde-9217be3db585';
 
 class Summoner {
   String summonerName;
@@ -210,16 +210,16 @@ class Matches {
   int gameId;
   int champion;
   int queue;
-
   Participants participants;
   ParticipantIds ids;
 
-  //GameInfo Translated
+  //GameInfo Specific to Summoner Translated
   String championName;
   bool win;
   int kills;
   int deaths;
   int assists;
+
 
   Matches.fromJson(Map<String, dynamic> jsonMap) {
     this.lane = jsonMap['lane'];
@@ -233,6 +233,7 @@ class Matches {
         orElse: () => null)).toString();
     Response response = await get(
         'https://na1.api.riotgames.com/lol/match/v4/matches/$gameId?api_key=$apiKey');
+    //Participants
     participants = Participants.fromJson(response.body);
     GetPlayerMatchInfo(participants, accId);
   }
@@ -335,9 +336,11 @@ class Participant {
 class Participants {
   List<Participant> participants;
   List<ParticipantIds> ids;
+  int gameDuration;
   Participants.fromJson(String jsonStr) {
     final _map = jsonDecode(jsonStr);
     this.participants = [];
+    this.gameDuration = _map['gameDuration'];
     this.ids = [];
     final _participantsList = _map['participants'];
     final _idList = _map['participantIdentities'];
