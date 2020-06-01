@@ -167,11 +167,12 @@ class _ViewSummonerState extends State<ViewSummoner> {
         .of(context)
         .settings
         .arguments;
+    //If anything fails to retrieve
     if (data.accountId == null || data.summonerName == null ||
         data.matches == null || data.rank == null) {
       return Scaffold(
           appBar: AppBar(
-            title: Text("Summoner Not Found"),
+            title: Text("Summoner Not Found!"),
           ),
           body: Container(
             decoration: BoxDecoration(

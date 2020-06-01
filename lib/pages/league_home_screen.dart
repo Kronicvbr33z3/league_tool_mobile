@@ -35,6 +35,7 @@ class _LeagueHomeScreenState extends State<LeagueHomeScreen> {
             if (value == '') {
               //Field is Empty Don't Submit
             } else {
+              //Initialize Summoner with value from text controller
               Summoner instance = Summoner(summonerName: value);
               await setupSummoner(instance);
               Navigator.pushNamed(context, ViewSummoner.routeName,

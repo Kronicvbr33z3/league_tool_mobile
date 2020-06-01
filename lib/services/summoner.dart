@@ -1,7 +1,7 @@
 import 'package:http/http.dart';
 import 'dart:convert';
 
-//Fuck MAPS holy shit, STATIC LIST OF CHAMPS WITH ID
+//List of Champs with ID's
 Map champs = {
   'Qiyana': '246',
   'Wukong': '62',
