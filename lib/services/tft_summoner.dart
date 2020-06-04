@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 
-final String apiKey = 'RGAPI-28342400-52d0-4af5-a168-aba1e7d51b8d';
+final String apiKey = 'RGAPI-a4686cb8-d29e-46af-8f53-434f59c746b3';
 
 class TFTSummoner {
   String tftName;
@@ -9,6 +9,7 @@ class TFTSummoner {
   List<Match> matches;
   int profileIconId;
   int summonerLevel;
+  List<Participant> player;
 
   TFTSummoner({this.tftName});
 
@@ -35,6 +36,8 @@ class TFTSummoner {
     try {
       //Retrieve Match History
       matches = [];
+      //array for all player info objects: 0 index -> Most Recent
+      player = [];
       Response response = await get(
           'https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/$puuid/ids?count=20&api_key=$apiKey');
       var mhjson = jsonDecode(response.body);
@@ -44,6 +47,14 @@ class TFTSummoner {
             'https://americas.api.riotgames.com/tft/match/v1/matches/$matchId?api_key=$apiKey');
         var json = jsonDecode(response.body);
         matches.add(Match.fromJson(json));
+      }
+      //Retrieve local player from data
+      for (var m = 0; m < matches.length; m++) {
+        for (var p = 0; p < 8; p++) {
+          if (matches[m].participants[p].puuid == puuid) {
+            player.add(matches[m].participants[p]);
+          }
+        }
       }
     } catch (e) {
       print("Unable to retrieve match history");
@@ -59,7 +70,7 @@ class Match {
     participants = [];
     var _participants = _info['participants'];
     for (var i = 0; i < 8; i++) {
-      Participant.fromJson(_participants[i]);
+      participants.add(Participant.fromJson(_participants[i]));
     }
   }
 }
