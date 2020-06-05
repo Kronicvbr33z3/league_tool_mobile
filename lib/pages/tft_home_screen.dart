@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:leaguetool/pages/view_tft_summoner.dart';
-import 'package:leaguetool/services/tft_summoner.dart';
 
 class TFTHomeScreen extends StatefulWidget {
   @override
@@ -15,9 +14,6 @@ class _TFTHomeScreenState extends State<TFTHomeScreen> {
     _controller = TextEditingController();
   }
 
-  Future<void> setupSummoner(TFTSummoner instance) async {
-    await instance.setupTFTSummoner();
-  }
 
   void dispose() {
     _controller.dispose();
@@ -35,11 +31,8 @@ class _TFTHomeScreenState extends State<TFTHomeScreen> {
             if (value == '') {
               //Field is Empty Don't Submit
             } else {
-              //Initialize Summoner with value from text controller
-              TFTSummoner instance = TFTSummoner(tftName: value);
-              await setupSummoner(instance);
               Navigator.pushNamed(context, ViewTFTSummoner.routeName,
-                  arguments: instance);
+                  arguments: value);
             }
           },
           decoration: InputDecoration(

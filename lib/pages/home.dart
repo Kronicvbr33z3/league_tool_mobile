@@ -7,15 +7,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  NetworkImage getImage(index) {
+  AssetImage getImage(index) {
     if (index == 0) {
-      return NetworkImage(
-          //Background Image
-          'https://media.comicbook.com/2017/06/skt-2017-1004526.jpg');
+      return AssetImage('assets/images/league_home.jpg');
     }
-    return NetworkImage(
-        //Background Image
-        'https://images.contentstack.io/v3/assets/blt731acb42bb3d1659/bltfe81204b8ec63e0e/5e6184a918d3347ceffbbd6d/TFT.S3_GALAXIES.ARTICLE-2.jpg');
+    return AssetImage('assets/images/tft_home.jpg');
   }
 
   int _currentIndex = 0;

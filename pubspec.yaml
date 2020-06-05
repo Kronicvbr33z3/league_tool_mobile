@@ -38,6 +38,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/images/league_home.jpg
+    - assets/images/tft_home.jpg
+    - assets/tft/champions/
+    - assets/tft/traits/
+    - assets/tft/items/
+    - assets/tft/champions.json
+    - assets/tft/items.json
+    - assets/tft/traits.json
   fonts:
     - family: Gotu
       fonts:

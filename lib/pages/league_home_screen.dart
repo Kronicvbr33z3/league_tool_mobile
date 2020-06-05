@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:leaguetool/services/summoner.dart';
 import 'package:leaguetool/pages/view_summoner.dart';
 
 class LeagueHomeScreen extends StatefulWidget {
@@ -14,11 +13,6 @@ class _LeagueHomeScreenState extends State<LeagueHomeScreen> {
     super.initState();
     _controller = TextEditingController();
   }
-
-  Future<void> setupSummoner(Summoner instance) async {
-    await instance.setupSummoner();
-  }
-
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -36,10 +30,8 @@ class _LeagueHomeScreenState extends State<LeagueHomeScreen> {
               //Field is Empty Don't Submit
             } else {
               //Initialize Summoner with value from text controller
-              Summoner instance = Summoner(summonerName: value);
-              await setupSummoner(instance);
               Navigator.pushNamed(context, ViewSummoner.routeName,
-                  arguments: instance);
+                  arguments: value);
             }
           },
           decoration: InputDecoration(
