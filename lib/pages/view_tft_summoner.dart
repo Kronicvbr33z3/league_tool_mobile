@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:leaguetool/services/tft_set_data.dart';
 import 'package:leaguetool/services/tft_summoner.dart';
 
@@ -13,18 +13,45 @@ class ViewTFTSummoner extends StatefulWidget {
   Make it Look Pretty
  */
 class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
+  ChampionData staticChampData = new ChampionData();
+
   void initState() {
-    ChampionData.init();
     super.initState();
   }
 
   Future<TFTSummoner> getSummoner(String value) async {
     TFTSummoner instance = TFTSummoner(tftName: value);
     await instance.setupTFTSummoner();
-    if (instance.puuid == null || instance.matches.length == 0) {
+    if (instance.puuid == null || instance.matches.length == 0 ||
+        instance.player.length == 0) {
       throw StateError('Error');
     }
     return instance;
+  }
+
+  Widget _getChampProfiles(TFTSummoner data, index, i) {
+    switch (data.player[index].units[i].items.length) {
+      case 0:
+        return staticChampData.getChampProfile(
+            data.player[index].units[i].character_id);
+      case 1:
+        return staticChampData.getChampProfile(
+            data.player[index].units[i].character_id,
+            data.player[index].units[i].items[0]);
+      case 2:
+        return staticChampData.getChampProfile(
+            data.player[index].units[i].character_id,
+            data.player[index].units[i].items[0],
+            data.player[index].units[i].items[1]);
+      case 3:
+        return staticChampData.getChampProfile(
+            data.player[index].units[i].character_id,
+            data.player[index].units[i].items[0],
+            data.player[index].units[i].items[1],
+            data.player[index].units[i].items[2]);
+      default:
+        return staticChampData.getChampProfile('TFT3_Ahri');
+    }
   }
 
   Widget _buildRow(TFTSummoner data, int index) {
@@ -34,15 +61,35 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
         color: Colors.deepPurple,
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(5),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "#${data.player[index].placement}",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+          contentPadding: EdgeInsets.all(5),
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "#${data.player[index].placement}",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 18),
+            ),
           ),
-        ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: data.player[index].units.length,
+                  itemBuilder: (BuildContext cttxt, int i) {
+                    return _getChampProfiles(data, index, i);
+                  },
+                ),
+              ),
+            ],
+          )
+
       ),
     );
   }
@@ -78,7 +125,7 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
       backgroundColor: Color.fromRGBO(28, 22, 46, 1),
       appBar: AppBar(
         title:
-            Text(data.tftName, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(data.tftName, style: TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0.0,
         backgroundColor: Color.fromRGBO(28, 22, 46, 1),
       ),
