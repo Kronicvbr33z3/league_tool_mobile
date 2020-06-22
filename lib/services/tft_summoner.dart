@@ -2,15 +2,17 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-final String apiKey = 'RGAPI-6a4c165d-df57-4229-95bc-53b3885a2cc0';
+final String apiKey = 'RGAPI-5daba490-13fb-4531-9baa-2749a1636342';
 
 class TFTSummoner {
   String tftName;
   String puuid;
+  String id;
   List<Match> matches;
   int profileIconId;
   int summonerLevel;
   List<Participant> player;
+  Rank rank;
 
   TFTSummoner({this.tftName});
 
@@ -18,6 +20,7 @@ class TFTSummoner {
     //Retrieve Summoner Information
     await setupSummoner();
     await setupMatchHistory();
+    await setupRank();
   }
 
   Future<void> setupSummoner() async {
@@ -28,6 +31,7 @@ class TFTSummoner {
       puuid = tftSummoner['puuid'];
       profileIconId = tftSummoner['profileIconId'];
       summonerLevel = tftSummoner['summonerLevel'];
+      id = tftSummoner['id'];
     } catch (e) {
       print('Unable to find Summoner!');
     }
@@ -61,6 +65,18 @@ class TFTSummoner {
       print("Unable to retrieve match history");
     }
   }
+
+  Future<void> setupRank() async {
+    try {
+      Response response = await get(
+          'https://na1.api.riotgames.com/tft/league/v1/entries/by-summoner/$id?api_key=$apiKey');
+      var json = jsonDecode(response.body);
+      //print(json);
+      rank = Rank.fromJson(json[0]);
+    } catch (e) {
+      print('Error Retrieving Rank');
+    }
+  }
 }
 
 class Match {
@@ -73,6 +89,22 @@ class Match {
     for (var i = 0; i < 8; i++) {
       participants.add(Participant.fromJson(_participants[i]));
     }
+  }
+}
+
+class Rank {
+  String tier;
+  String rank;
+  int lp;
+  int wins;
+  int losses;
+
+  Rank.fromJson(Map<String, dynamic> json) {
+    this.tier = json['tier'];
+    this.rank = json['rank'];
+    this.lp = json['leaguePoints'];
+    this.wins = json['wins'];
+    this.losses = json['losses'];
   }
 }
 

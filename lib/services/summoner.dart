@@ -152,6 +152,19 @@ Map champs = {
   'Leblanc': '7',
   'Ezreal': '81'
 };
+Map queues = {
+  420: "Solo/Duo",
+  440: "Flex",
+  0: "Custom",
+  76: "URF",
+  400: "Normal",
+  430: "Blind",
+  450: "ARAM",
+  830: "Bots",
+  840: "Bots",
+  850: "Bots",
+  900: "URF",
+};
 
 final String apiKey = 'RGAPI-88da60fc-f70c-446c-9bde-9217be3db585';
 
@@ -219,6 +232,7 @@ class Matches {
   int kills;
   int deaths;
   int assists;
+  String queueType;
 
 
   Matches.fromJson(Map<String, dynamic> jsonMap) {
@@ -227,6 +241,7 @@ class Matches {
     this.champion = jsonMap['champion'];
     this.queue = jsonMap['queue'];
   }
+
   Future<void> getGameInfo(String accId) async {
     //This line of codeWOOOOOOOOOOOOOOOOOOOOOOOOOOO
     championName = (champs.keys.firstWhere((k) => champs[k] == '$champion',
@@ -239,6 +254,7 @@ class Matches {
   }
 
   GetPlayerMatchInfo(Participants participants, String accId) {
+    queueType = queues[queue];
     for (var i = 0; i < (10); i++) {
       //If someone in the match has the same account ID
       if (participants.ids[i].player.accountId == accId) {
@@ -246,7 +262,6 @@ class Matches {
         kills = participants.participants[i].stats.kills;
         deaths = participants.participants[i].stats.deaths;
         assists = participants.participants[i].stats.assists;
-
       }
     }
   }

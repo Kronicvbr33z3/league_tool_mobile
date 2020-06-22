@@ -46,7 +46,8 @@ class ChampionData {
     }
   }
 
-  Widget getChampProfile(String champId, [int item1, int item2, int item3]) {
+  Widget getChampProfile(String champId, int tier,
+      [int item1, int item2, int item3]) {
     AssetImage getChampImage(String champId) {
       String name = data['$champId']
           .name
@@ -136,8 +137,37 @@ class ChampionData {
       }
     }
 
+    Row getStars(int tier) {
+      switch (tier) {
+        case 1:
+          return Row(children: <Widget>[SizedBox(width: 10, height: 10,)],);
+        case 2:
+          return Row(children: <Widget>[
+            Image(image: AssetImage('assets/tft/champions/star2.png'),
+              width: 10,
+              height: 10,),
+            Image(image: AssetImage('assets/tft/champions/star2.png'),
+              width: 10,
+              height: 10,),
+          ],);
+        case 3:
+          return Row(children: <Widget>[
+            Image(image: AssetImage('assets/tft/champions/star.png'),
+              width: 10,
+              height: 10,),
+            Image(image: AssetImage('assets/tft/champions/star.png'),
+              width: 10,
+              height: 10,),
+            Image(image: AssetImage('assets/tft/champions/star.png'),
+              width: 10,
+              height: 10,),
+          ],);
+      }
+    }
+
     return Column(
       children: <Widget>[
+        getStars(tier),
         Container(
           decoration: BoxDecoration(
             border: Border.all(color: getBorderColor(champId), width: 2),

@@ -81,17 +81,32 @@ class _ViewSummonerState extends State<ViewSummoner> {
         contentPadding: EdgeInsets.all(5),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-              (() {
-                if (data.matches.matches[index].win) {
-                  return "Victory";
-                }
-                return "Defeat";
-              }()),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 18)),
+          child: Column(
+            children: <Widget>[
+              Text(
+                  (() {
+                    if (data.matches.matches[index].win) {
+                      return "Victory";
+                    }
+                    return "Defeat";
+                  }()),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 18)),
+              Text(
+                  (() {
+                    if (data.matches.matches[index].queueType != null) {
+                      return data.matches.matches[index].queueType;
+                    }
+                    return "Unknown";
+                  }()),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 11)),
+            ],
+          ),
         ),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,19 +165,32 @@ class _ViewSummonerState extends State<ViewSummoner> {
     );
   }
 
-  Widget _buildRankInfo(Summoner data) {
+  Text getQueue(Summoner data, int i) {
+    switch (data.rank.ranks[i].queueType) {
+      case "RANKED_SOLO_5x5":
+        return Text('Solo/Duo', style: TextStyle(
+            color: Colors.yellowAccent, fontWeight: FontWeight.bold));
+      case "RANKED_FLEX_SR":
+        return Text('Flex', style: TextStyle(
+          color: Colors.yellowAccent, fontWeight: FontWeight.bold,));
+      default:
+        return Text('Unknown Queue');
+    }
+  }
+
+
+  Widget _buildRankInfo(Summoner data, int i) {
     return Column(
       children: <Widget>[
-        Text(data.rank.ranks[0].queueType,
+        getQueue(data, i),
+        Text(data.rank.ranks[i].tier,
             style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(data.rank.ranks[0].tier,
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(data.rank.ranks[0].rank,
+        Text(data.rank.ranks[i].rank,
             style: TextStyle(fontWeight: FontWeight.bold)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(data.rank.ranks[0].lp.toString() ?? "Not Found",
+            Text(data.rank.ranks[i].lp.toString() ?? "Not Found",
                 style: TextStyle(fontWeight: FontWeight.bold)),
             Text('LP', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
@@ -182,7 +210,19 @@ class _ViewSummonerState extends State<ViewSummoner> {
               color: Color.fromRGBO(43, 38, 60, 1),
             ),
             margin: EdgeInsets.fromLTRB(300, 0, 10, 0),
-            child: _buildRankInfo(data),
+            child: Column(
+              children: <Widget>[
+                ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      Divider(color: Colors.grey,),
+                  itemCount: data.rank.ranks.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, i) {
+                    return _buildRankInfo(data, i);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ],

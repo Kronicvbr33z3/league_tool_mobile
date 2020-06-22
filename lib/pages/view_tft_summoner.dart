@@ -9,8 +9,7 @@ class ViewTFTSummoner extends StatefulWidget {
   @override
   _ViewTFTSummonerState createState() => _ViewTFTSummonerState();
 }
-/*TODO Implement a FutureBuilder Widget, Refactor code as necessary.
-  Make it Look Pretty
+/*TODO Sort by stars
  */
 class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
   ChampionData staticChampData = new ChampionData();
@@ -33,24 +32,28 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
     switch (data.player[index].units[i].items.length) {
       case 0:
         return staticChampData.getChampProfile(
-            data.player[index].units[i].character_id);
+            data.player[index].units[i].character_id,
+            data.player[index].units[i].tier);
       case 1:
         return staticChampData.getChampProfile(
             data.player[index].units[i].character_id,
+            data.player[index].units[i].tier,
             data.player[index].units[i].items[0]);
       case 2:
         return staticChampData.getChampProfile(
             data.player[index].units[i].character_id,
+            data.player[index].units[i].tier,
             data.player[index].units[i].items[0],
             data.player[index].units[i].items[1]);
       case 3:
         return staticChampData.getChampProfile(
             data.player[index].units[i].character_id,
+            data.player[index].units[i].tier,
             data.player[index].units[i].items[0],
             data.player[index].units[i].items[1],
             data.player[index].units[i].items[2]);
       default:
-        return staticChampData.getChampProfile('TFT3_Ahri');
+        return staticChampData.getChampProfile('TFT3_Ahri', 3);
     }
   }
 
@@ -75,16 +78,17 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
-                height: 50,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: data.player[index].units.length,
-                  itemBuilder: (BuildContext cttxt, int i) {
-                    return _getChampProfiles(data, index, i);
-                  },
+              Expanded(
+                child: Container(
+                  height: 60,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: data.player[index].units.length,
+                    itemBuilder: (BuildContext cttxt, int i) {
+                      return _getChampProfiles(data, index, i);
+                    },
+                  ),
                 ),
               ),
             ],
@@ -95,12 +99,39 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
   }
 
   Widget _buildRank(TFTSummoner data) {
-    return Container();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              color: Color.fromRGBO(43, 38, 60, 1),
+            ),
+            margin: EdgeInsets.fromLTRB(300, 0, 10, 0),
+            child: Column(children: <Widget>[
+              Text(data.rank.tier,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(data.rank.rank,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(data.rank.lp.toString() ?? "Not Found",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('LP', style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ]),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _buildMatchHistory(TFTSummoner data) {
     return ListView.builder(
-        itemCount: 20,
+        itemCount: data.player.length,
         padding: const EdgeInsets.all(0),
         itemBuilder: (context, i) {
           return Padding(
