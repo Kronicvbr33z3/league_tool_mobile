@@ -1,5 +1,6 @@
-import 'package:http/http.dart';
 import 'dart:convert';
+
+import 'package:http/http.dart';
 
 //List of Champs with ID's
 Map champs = {
@@ -234,7 +235,6 @@ class Matches {
   int assists;
   String queueType;
 
-
   Matches.fromJson(Map<String, dynamic> jsonMap) {
     this.lane = jsonMap['lane'];
     this.gameId = jsonMap['gameId'];
@@ -250,10 +250,10 @@ class Matches {
         'https://na1.api.riotgames.com/lol/match/v4/matches/$gameId?api_key=$apiKey');
     //Participants
     participants = Participants.fromJson(response.body);
-    GetPlayerMatchInfo(participants, accId);
+    getPlayerMatchInfo(participants, accId);
   }
 
-  GetPlayerMatchInfo(Participants participants, String accId) {
+  getPlayerMatchInfo(Participants participants, String accId) {
     queueType = queues[queue];
     for (var i = 0; i < (10); i++) {
       //If someone in the match has the same account ID
@@ -315,7 +315,6 @@ class Stats {
   int deaths;
   int assists;
 
-
   Stats.fromJson(Map<String, dynamic> jsonMap) {
     this.win = jsonMap['win'];
     this.item0 = jsonMap['item0'];
@@ -328,7 +327,6 @@ class Stats {
     this.kills = jsonMap['kills'];
     this.deaths = jsonMap['deaths'];
     this.assists = jsonMap['assists'];
-
   }
 }
 
@@ -374,15 +372,13 @@ class Ranks {
   String tier;
   int lp;
 
-  Ranks.fromJson(Map<String, dynamic> jsonMap){
+  Ranks.fromJson(Map<String, dynamic> jsonMap) {
     this.queueType = jsonMap['queueType'];
     this.wins = jsonMap['wins'];
     this.rank = jsonMap['rank'];
     this.tier = jsonMap['tier'];
     this.lp = jsonMap['leaguePoints'];
   }
-
-
 }
 
 //TOP LEVEL RANK
@@ -390,7 +386,6 @@ class Rank {
   List<Ranks> ranks;
   Rank.fromJson(String jsonStr) {
     final _map = jsonDecode(jsonStr);
-
 
     //Takes length of list to create ranks
     var list = _map as List;

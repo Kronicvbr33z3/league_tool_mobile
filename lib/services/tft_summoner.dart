@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-final String apiKey = 'RGAPI-5daba490-13fb-4531-9baa-2749a1636342';
+final String apiKey = 'RGAPI-7a07bc49-2c99-40fc-bd2c-0d5f04ff376b';
 
 class TFTSummoner {
   String tftName;

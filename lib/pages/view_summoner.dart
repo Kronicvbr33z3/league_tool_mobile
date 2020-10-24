@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leaguetool/pages/view_analyzed_match.dart';
 import 'package:leaguetool/services/summoner.dart';
 
 class ViewSummoner extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ViewSummonerState extends State<ViewSummoner> {
   }
 
   Widget _buildRow(Summoner data, int index) {
+    RouteArguments args = RouteArguments(data, index);
     Color getColor(int index) {
       //print(data.matches.matches[index].participants.gameDuration / 60);
       if (data.matches.matches[index].win) {
@@ -161,6 +163,10 @@ class _ViewSummonerState extends State<ViewSummoner> {
           ],
         ),
         trailing: getChampionIcon(data.matches.matches[index].championName),
+        onTap: () {
+          Navigator.pushNamed(context, ViewAnalyzedMatch.routeName,
+              arguments: args);
+        },
       ),
     );
   }
@@ -301,5 +307,12 @@ class _ViewSummonerState extends State<ViewSummoner> {
           }
         });
   }
+}
+
+class RouteArguments {
+  Summoner data;
+  int index;
+
+  RouteArguments(this.data, this.index);
 }
 

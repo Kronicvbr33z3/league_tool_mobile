@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leaguetool/pages/home.dart';
 import 'package:leaguetool/pages/loading.dart';
 import 'package:leaguetool/pages/tier_list.dart';
+import 'package:leaguetool/pages/view_analyzed_match.dart';
 import 'package:leaguetool/pages/view_summoner.dart';
 import 'package:leaguetool/pages/view_tft_summoner.dart';
 
@@ -18,6 +19,7 @@ void main() => runApp(MaterialApp(
         '/home': (context) => Home(),
         ViewSummoner.routeName: (context) => ViewSummoner(),
         ViewTFTSummoner.routeName: (context) => ViewTFTSummoner(),
+        ViewAnalyzedMatch.routeName: (context) => ViewAnalyzedMatch(),
         '/tier_list': (context) => TierList(),
       },
 ));

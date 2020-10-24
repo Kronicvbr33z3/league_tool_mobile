@@ -1,5 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -49,12 +50,16 @@ class ChampionData {
   Widget getChampProfile(String champId, int tier,
       [int item1, int item2, int item3]) {
     AssetImage getChampImage(String champId) {
+      /*
+      Legacy, Thank you Riot
       String name = data['$champId']
           .name
           .toLowerCase()
           .replaceAll(RegExp(' +'), '')
           .replaceAll('\'', '');
-      return AssetImage('assets/tft/champions/$name.png');
+
+       */
+      return AssetImage('assets/tft/champions/$champId.png');
     }
 
     AssetImage getItem(int id) {
@@ -140,28 +145,51 @@ class ChampionData {
     Row getStars(int tier) {
       switch (tier) {
         case 1:
-          return Row(children: <Widget>[SizedBox(width: 10, height: 10,)],);
+          return Row(
+            children: <Widget>[
+              SizedBox(
+                width: 10,
+                height: 10,
+              )
+            ],
+          );
         case 2:
-          return Row(children: <Widget>[
-            Image(image: AssetImage('assets/tft/champions/star2.png'),
-              width: 10,
-              height: 10,),
-            Image(image: AssetImage('assets/tft/champions/star2.png'),
-              width: 10,
-              height: 10,),
-          ],);
+          return Row(
+            children: <Widget>[
+              Image(
+                image: AssetImage('assets/tft/champions/star2.png'),
+                width: 10,
+                height: 10,
+              ),
+              Image(
+                image: AssetImage('assets/tft/champions/star2.png'),
+                width: 10,
+                height: 10,
+              ),
+            ],
+          );
         case 3:
-          return Row(children: <Widget>[
-            Image(image: AssetImage('assets/tft/champions/star.png'),
-              width: 10,
-              height: 10,),
-            Image(image: AssetImage('assets/tft/champions/star.png'),
-              width: 10,
-              height: 10,),
-            Image(image: AssetImage('assets/tft/champions/star.png'),
-              width: 10,
-              height: 10,),
-          ],);
+          return Row(
+            children: <Widget>[
+              Image(
+                image: AssetImage('assets/tft/champions/star.png'),
+                width: 10,
+                height: 10,
+              ),
+              Image(
+                image: AssetImage('assets/tft/champions/star.png'),
+                width: 10,
+                height: 10,
+              ),
+              Image(
+                image: AssetImage('assets/tft/champions/star.png'),
+                width: 10,
+                height: 10,
+              ),
+            ],
+          );
+        default:
+          return Row();
       }
     }
 
