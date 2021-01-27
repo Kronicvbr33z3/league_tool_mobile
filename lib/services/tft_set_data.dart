@@ -195,7 +195,7 @@ class ChampionData {
 
     return Column(
       children: <Widget>[
-        getStars(tier),
+        //getStars(tier),
         Container(
           decoration: BoxDecoration(
             border: Border.all(color: getBorderColor(champId), width: 2),

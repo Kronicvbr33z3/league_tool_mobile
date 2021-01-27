@@ -46,11 +46,13 @@ class TFTSummoner {
       Response response = await get(
           'https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/$puuid/ids?count=20&api_key=$apiKey');
       var mhjson = jsonDecode(response.body);
+      print(mhjson);
       for (var i = 0; i < mhjson.length; i++) {
         var matchId = mhjson[i];
         Response response = await get(
             'https://americas.api.riotgames.com/tft/match/v1/matches/$matchId?api_key=$apiKey');
         var json = jsonDecode(response.body);
+        print(json);
         matches.add(Match.fromJson(json));
       }
       //Retrieve local player from data
@@ -71,7 +73,7 @@ class TFTSummoner {
       Response response = await get(
           'https://na1.api.riotgames.com/tft/league/v1/entries/by-summoner/$id?api_key=$apiKey');
       var json = jsonDecode(response.body);
-      //print(json);
+      print(json);
       rank = Rank.fromJson(json[0]);
     } catch (e) {
       print('Error Retrieving Rank');

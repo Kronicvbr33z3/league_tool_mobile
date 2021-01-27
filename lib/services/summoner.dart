@@ -151,7 +151,13 @@ Map champs = {
   'Taric': '44',
   'Quinn': '133',
   'Leblanc': '7',
-  'Ezreal': '81'
+  'Ezreal': '81',
+  'Viego': '234',
+  'Samira': '360',
+  'Lillia': '876',
+  'Seraphine': '147',
+  'Yone': '777',
+  'Rell': '526'
 };
 Map queues = {
   420: "Solo/Duo",

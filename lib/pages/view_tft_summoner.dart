@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:leaguetool/services/tft_set_data.dart';
 import 'package:leaguetool/services/tft_summoner.dart';
 
@@ -82,6 +81,7 @@ class _ViewTFTSummonerState extends State<ViewTFTSummoner> {
                 child: Container(
                   height: 60,
                   child: ListView.builder(
+                    addAutomaticKeepAlives: true,
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     itemCount: data.player[index].units.length,

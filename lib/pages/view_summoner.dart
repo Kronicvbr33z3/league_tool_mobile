@@ -37,7 +37,7 @@ class _ViewSummonerState extends State<ViewSummoner> {
     CircleAvatar getChampionIcon(String championName) {
       String champ = championName.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
       String path =
-          'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/$champ.png';
+          'http://ddragon.leagueoflegends.com/cdn/11.2.1/img/champion/$champ.png';
       return CircleAvatar(
         backgroundImage: NetworkImage(path),
         backgroundColor: Colors.transparent,
@@ -219,10 +219,12 @@ class _ViewSummonerState extends State<ViewSummoner> {
             child: Column(
               children: <Widget>[
                 ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      Divider(color: Colors.grey,),
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                  ),
                   itemCount: data.rank.ranks.length,
                   shrinkWrap: true,
+                  addAutomaticKeepAlives: true,
                   itemBuilder: (context, i) {
                     return _buildRankInfo(data, i);
                   },
